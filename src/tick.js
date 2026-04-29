@@ -162,7 +162,8 @@ function startMainTick() {
       }
     }
 
-    const trackEyesNow = (idleNow && ctx.currentSvg === SVG_IDLE_FOLLOW && !isMouseIdle) || miniIdleNow;
+    // Eye tracking disabled for idle state - only track in mini mode
+    const trackEyesNow = miniIdleNow;
     if (!trackEyesNow) return;
     if (ctx.eyePauseUntil) {
       if (Date.now() < ctx.eyePauseUntil) return;

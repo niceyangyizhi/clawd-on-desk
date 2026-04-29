@@ -66,7 +66,8 @@ function getObjectSvgName(objectEl) {
 const SVG_IDLE_FOLLOW = "clawd-idle-follow.svg";
 
 function shouldTrackEyes(state, svg) {
-  return (state === "idle" && svg === SVG_IDLE_FOLLOW) || state === "mini-idle";
+  // Eye tracking disabled for idle state - only track in mini mode
+  return state === "mini-idle";
 }
 
 // --- IPC-triggered reactions (from hit window via main relay) ---

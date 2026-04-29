@@ -10,10 +10,11 @@ module.exports = function initState(ctx) {
 const SVG_IDLE_FOLLOW = "clawd-idle-follow.svg";
 const SVG_IDLE_LOOK = "clawd-idle-look.svg";
 const SVG_IDLE_LIVING = "clawd-idle-living.svg";
+const SVG_IDLE_READING = "clawd-idle-reading.svg";
 
 // ── State → SVG mapping ──
 const STATE_SVGS = {
-  idle: [SVG_IDLE_FOLLOW, "clawd-working-debugger.svg", "clawd-idle-reading.svg"],
+  idle: [SVG_IDLE_FOLLOW, "clawd-working-debugger.svg", SVG_IDLE_READING],
   yawning: ["clawd-idle-yawn.svg"],
   dozing: ["clawd-idle-doze.svg"],
   collapsing: ["clawd-collapse-sleep.svg"],
