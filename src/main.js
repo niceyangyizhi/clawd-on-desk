@@ -779,8 +779,12 @@ function createWindow() {
     const clamped = clampToScreen(x, y, width, height);
     if (clamped.x !== x || clamped.y !== y) {
       win.setBounds({ ...clamped, width, height });
+      syncHitWin();
     }
   });
+  // Remember position before display removal so we can restore it
+  let _savedBoundsBeforeDisplayRemoval = null;
+
   screen.on("display-removed", () => {
     reapplyMacVisibility();
     if (!win || win.isDestroyed()) return;
@@ -789,11 +793,32 @@ function createWindow() {
       return;
     }
     const { x, y, width, height } = win.getBounds();
+    _savedBoundsBeforeDisplayRemoval = { x, y, width, height };
     const clamped = clampToScreen(x, y, width, height);
     win.setBounds({ ...clamped, width, height });
+    syncHitWin();
   });
   screen.on("display-added", () => {
     reapplyMacVisibility();
+    if (!win || win.isDestroyed()) return;
+    // Restore previous position if the display it was on is back
+    if (_savedBoundsBeforeDisplayRemoval) {
+      const saved = _savedBoundsBeforeDisplayRemoval;
+      _savedBoundsBeforeDisplayRemoval = null;
+      // Check if saved position is now within a valid display
+      const displays = screen.getAllDisplays();
+      const onScreen = displays.some(d => {
+        const wa = d.workArea;
+        const cx = saved.x + saved.width / 2;
+        const cy = saved.y + saved.height / 2;
+        return cx >= wa.x && cx <= wa.x + wa.width &&
+               cy >= wa.y && cy <= wa.y + wa.height;
+      });
+      if (onScreen) {
+        win.setBounds(saved);
+        syncHitWin();
+      }
+    }
   });
 }
 
